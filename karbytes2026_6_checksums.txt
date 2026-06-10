@@ -14,7 +14,7 @@ file_2: KARBYTES_Curated_Music_Randomizer-main.zip // SHA-256: 87e1be61618114ef5
 
 file_3: karbytes_basement_54-main.zip // SHA-256: cb07b64b575763a2e4597e1b57fa81e2c1aa5fe2cd8c882773a8f268f023847d
 
-file_4: KARLINA_OBJECT_extension_pack_67-main_10june2026.zip // SHA-256: 1e31f04eae16c3309340a5f4150868c684bfb2b48e9572c06c36fa476e603ff4
+file_4: KARLINA_OBJECT_extension_pack_67-main_10june2026.zip // SHA-256: 8325c6e73649dd6adb464996128339e5c9cc7e303d4c1242335972d46ae6d646
 
 file_5: KARLINA_OBJECT_APPS-main.zip // SHA-256: ef6c27b9ff75bc56b23e881d1766791827fad78e2f0fbc62e0f89bf02c50db3c
 
