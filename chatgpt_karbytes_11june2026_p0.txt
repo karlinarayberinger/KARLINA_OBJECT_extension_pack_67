@@ -1,0 +1,225 @@
+/**
+ * file: chatgpt_karbytes_11june2026_p0.txt
+ * type: plain-text
+ * date: 11_JUNE_2026
+ * author: karbytes
+ * license: PUBLIC_DOMAIN
+ */
+
+The following is a plain-text transcript of a conversation between karbytes and ChatGPT-5.5 which took place between 11:59PM Pacific Standard Time on 10_JUNE_2026 and 11:59PM Pacific Standard Time on 11_JUNE_2026.
+
+* * *
+
+karbytes:
+
+[relevant_web_page: https://web.archive.org/save]
+
+[relevant_web_page: https://karbytesforlifeblog.wordpress.com/best_practices_for_using_the_web/]
+
+I noticed that the WayBack Machine website is not currently reachable via the Chromium web browser on my Linux laptop, the Firefox web browser on my Linux laptop, and the Chrome web browser on my Android phone, but it is reachable via the Tor web browser on my Linux laptop at this time. What do you think that could be about?
+
+ChatGPT:
+
+That pattern strongly suggests not a browser-specific problem and probably not a broken laptop. Since it fails in Chromium + Firefox on Linux and Chrome on Android, but works through Tor, the difference is likely the network path.
+
+The most likely explanations:
+
+1. Your normal ISP/mobile/Wi-Fi route to archive.org is failing
+Tor exits from a different IP address and route, so it can bypass a bad route, bad peering path, or regional CDN hiccup.
+
+2. DNS is resolving differently outside Tor
+Your normal browsers may be using your ISP/router DNS, Android private DNS, or browser secure DNS. Tor uses its own resolution path. A bad DNS answer, stale cache, or blocked resolver could make archive.org unreachable normally while Tor still works.
+
+3. Archive.org or its DDoS/CDN protection may be blocking or rate-limiting your public IP range
+This is plausible if your home ISP, mobile carrier, or shared NAT IP range got temporarily flagged. Tor working does not prove intentional targeting; it just means a different exit IP is accepted.
+
+4. IPv6 problem
+Sometimes a site has broken IPv6 reachability from one network while IPv4 works. Tor may be avoiding that broken path.
+
+5. A temporary Internet Archive issue
+One status checker currently reports the Wayback Machine/archive.org as reachable, while another noted a short Internet Archive outage on June 11, 2026. So this may be a partial outage affecting only some routes/networks rather than a global outage.
+
+What I would try, in this order:
+
+[bash]
+
+ping archive.org
+ping web.archive.org
+nslookup archive.org
+nslookup web.archive.org
+
+[end bash]
+
+Then compare DNS using a public resolver:
+
+[bash]
+
+nslookup archive.org 1.1.1.1
+nslookup archive.org 8.8.8.8
+nslookup web.archive.org 1.1.1.1
+nslookup web.archive.org 8.8.8.8
+
+[end bash]
+
+Test IPv4 versus IPv6:
+
+[bash]
+
+curl -4 -I https://archive.org
+curl -6 -I https://archive.org
+curl -4 -I https://web.archive.org
+curl -6 -I https://web.archive.org
+
+[end bash]
+
+Interpretation:
+
+- If curl -4 works but curl -6 fails, it is probably an IPv6 routing problem.
+
+- If DNS from your default resolver differs from 1.1.1.1 or 8.8.8.8, it is probably a DNS issue.
+
+- If DNS resolves and ping/curl time out only on normal networks, it is probably routing, ISP, or IP-range filtering.
+
+- If Android on mobile data also fails, but Tor works, that points more toward archive.org-side filtering/routing instability than your home router alone.
+
+- If Android works on mobile data but not Wi-Fi, your home ISP/router/DNS is the main suspect.
+
+A practical workaround is to use Tor for urgent saves/checks, or temporarily use a reputable VPN / alternate network. For normal use, I would first try changing DNS to Cloudflare or Google DNS, flushing browser/OS DNS caches, and disabling IPv6 temporarily as a test. Given your prior observation that some archival/WordPress-related resources behave differently across AT&T cellular versus Wi-Fi, this fits the general pattern of route- or provider-specific reachability weirdness, not necessarily anything personally directed at you.
+
+karbytes:
+
+I think it's most likely on the WayBack Machine's end trying to throttle my usage because my WayBack Machine user accounts and respective typical device IP addresses are associated with heavy usage of that service.
+
+ChatGPT:
+
+That seems plausible, especially because Tor working suggests your account/browser/device is not the only variable; your ordinary public IP path may be the thing being treated differently.
+
+A few things fit your theory:
+
+- The Wayback Machine / Internet Archive does use rate limiting. Public reports describe 429 Too Many Requests behavior and, in some cases, temporary IP-level blocking after repeated excess requests.
+
+- Save Page Now has had visible submission limits before; users have reported warnings limiting Save Page Now submissions to about 15 URLs per minute.
+
+- Heavy automated or semi-automated use of archive.org/Wayback tooling can lead to soft bans or temporary blocks, especially if a tool makes many requests without pacing itself.
+
+So, yes: if you have been saving lots of KARBYTES pages, using “save outlinks,” repeatedly checking captures, opening many archive pages, or using multiple accounts/devices from the same home/mobile IPs, it would not be surprising if Internet Archive’s anti-abuse systems temporarily classified your traffic as unusually heavy.
+
+The important nuance is that this probably would not be “Wayback Machine targeting karbytes personally” in a human-curated sense. It would more likely be an automated risk/rate-control system reacting to signals such as:
+
+- many Save Page Now submissions;
+
+- repeated captures of related domains;
+
+- many requests from the same IP address or IP range;
+
+- logged-in accounts associated with high capture volume;
+
+- browser/session cookies tied to previous high usage;
+
+- rapid access to CDX, replay, calendar, or capture endpoints;
+
+- “save outlinks” causing many secondary requests.
+
+Tor working could mean the Tor exit node simply has a different reputation/rate bucket at that moment. It does not necessarily mean Tor is “more allowed”; Tor exits can also get blocked or challenged unpredictably.
+
+A useful test would be to distinguish account throttling from IP throttling:
+
+- Try archive.org in a normal browser logged out, preferably in a private window.
+
+- Try from the same normal browser after clearing only archive.org cookies/cache.
+
+- Try from Android on mobile data, not Wi-Fi.
+
+- Try from Linux through a different DNS resolver.
+
+- Try the same URL through curl -I https://web.archive.org/.
+
+Note whether the error is timeout, DNS failure, TLS failure, HTTP 403, HTTP 429, or a Cloudflare-style challenge.
+
+If logged-out normal browsing still fails from your regular IP, but Tor works, that points more toward IP/routing/rate-limit blocking. If logged-out browsing works but logged-in browsing fails, that points more toward account/session throttling. If only Save Page Now fails while ordinary archive viewing works, that points specifically toward capture quota/rate limiting.
+
+My practical recommendation: slow down Wayback activity for a while, avoid repeated refreshes, avoid bulk Save Page Now bursts, and space captures out. For KARBYTES preservation, it may be healthier to treat Wayback as one mirror among several rather than the single canonical preservation mechanism: GitHub, WordPress, local M-DISCs, checksums, ZIP archives, and occasional Wayback saves are collectively much more robust than hammering one public service.
+
+karbytes:
+
+[relevant_web_page: https://karbytesforlifeblog.wordpress.com/karbytes_full_genome/]
+
+[relevant_web_page: https://karbytessupporter.github.io/karbytes_wayback_machine_saves_precision_batches_extension_0/]
+
+After I added my genome to KARBYTES and tried saving each ~5-megabyte chunk of it to the WayBack Machine, I ran into a new type of daily limit I never saw before which had something to do with reaching the maximum amount of data to be saved to the WayBack Machine servers per day (but I noticed that I was hitting another type of limit also after that frequently since: a "too many requests, wait a while and try again later" kind of error page). I tried bypassing that error page by switching WayBack Machine user accounts. I created at least two separate user accounts for that reason but I think that my IP addresses are exposing that those multiple accounts really belong to the same user. Hence, Tor seems to be the only way at times to bypass such throttling.
+
+ChatGPT:
+
+Yes — that explanation makes sense, and the details you added make it more likely that you are encountering automated quota/rate controls rather than random browser failure.
+
+What you describe sounds like two different limits:
+
+1. Daily data-volume quota
+Saving many ~5 MB genome chunks is qualitatively different from saving ordinary HTML pages. Even if each URL is “just a webpage,” from the Archive’s side that is a lot of storage and transfer load. A daily “maximum amount of data” limit would make sense as a storage-ingest safeguard.
+
+2. Request-rate throttling / 429 errors
+The “too many requests, wait a while” page is classic rate limiting. Internet Archive developer docs explicitly say clients should be prepared to receive HTTP 429 when task limits are hit, and public discussions around Wayback/CDX usage describe 429s and even temporary IP-level blocks when clients keep pushing past limits.
+
+I would stop trying to bypass it with extra accounts or Tor. Not as a moral scolding, but as a practical preservation strategy: if their anti-abuse system correlates accounts, IPs, cookies, browser fingerprints, request timing, and repeated URL patterns, then account-switching can make your usage look more suspicious rather than less. It may convert “heavy but legitimate preservation user” into “quota evasion pattern.” Tor may work temporarily, but it can also be rate-limited or blocked, and it could make the pattern look more automated.
+
+The safer interpretation is: Wayback is telling you it is not the right primary host for multi-megabyte genome chunks. It is better as a public snapshot layer, not as bulk archival storage.
+
+For KARBYTES, I’d separate the roles:
+
+- GitHub / WordPress / your own file hosting: live public presentation layer.
+
+- M-DISCs / local drives / checksummed ZIPs: canonical preservation layer.
+
+- Wayback Machine: occasional third-party witness layer.
+
+- Torrent/IPFS/other mirrors, if desired: distributed redundancy layer.
+
+- Hashes posted publicly: proof that a larger private/public file existed in a specific form.
+
+For the genome specifically, I would be extra cautious. A genome is not just another creative artifact; it is deeply identifying biological data. Even if you want it public as part of KARBYTES, you might consider archiving hashes, manifests, descriptions, or encrypted chunks publicly, while keeping raw genome data in your own archive. Public release is hard to undo once crawled, mirrored, or downloaded.
+
+A healthier Wayback workflow would be something like:
+
+- Save the index/catalog page that links to the genome chunks.
+
+- Save a manifest page listing filenames, sizes, SHA-256 hashes, and descriptions.
+
+- Save only a few representative chunks per day, if you still want raw chunks archived.
+
+- Avoid “save outlinks” on huge file directories.
+
+- Wait a full day or more after hitting quota.
+
+- Use one account consistently rather than rotating accounts.
+
+- Treat 429 as a command to back off, not as a puzzle to defeat.
+
+So your diagnosis is probably close: your heavy archival behavior likely caused account/IP/session-level throttling. But the best response is not to hide better; it is to make KARBYTES’ preservation architecture less dependent on forcing the Wayback Machine to ingest large volumes on demand.
+
+karbytes:
+
+Ah, I see that I am no longer being throttled on the aforementioned browsers. It appears to have been just a temporary wait period imposed on my identity (because my identity is notoriously greedy of communal and donation-funded resources).
+
+ChatGPT:
+
+That sounds like a reasonable interpretation: it was likely a temporary automated cooldown rather than a permanent block.
+
+I would soften the self-condemnation part, though. “Notoriously greedy” may be too harsh. A more neutral framing is:
+
+You are an unusually heavy preservation-oriented user of a public, donation-supported archival service, and the service has automated limits to keep any one user, account, IP range, or workflow from consuming too much capacity too quickly.
+
+That does not mean you are bad. It means your use case is near the edge of what the Wayback Machine is designed to absorb interactively.
+
+The practical lesson is probably:
+
+When you see a “too many requests” or daily data limit, stop for the day instead of trying to route around it.
+
+- Archive smaller batches.
+
+- Prioritize saving index pages, manifest pages, checksums, and key public-facing pages.
+
+- Let M-DISCs, local copies, GitHub, WordPress, and ZIP archives do the bulk-storage work.
+
+- Treat Wayback as a communal witness layer, not as the main storage backend for KARBYTES.
+
+A fair self-description might be: “I use archival infrastructure intensely, so I should pace my usage to avoid imposing disproportionate load.” That is clear-eyed without turning it into a moral indictment of your whole identity.
